@@ -1,15 +1,18 @@
 import { ReactElement, useState } from "react";
-import { IProduct } from "../../types/product";
-
-import "./styles.css"
-import { DeleteIcon, EditIcon } from "../icons/crud";
-import { deleter } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
+
+import { deleter } from "../../utils/api";
 import { deleteProduct, updateProduct } from "../../store/reducers/products";
 import Form from "../reusable/form";
 import Image from "../reusable/image";
+import CardsHero from "../reusable/cardsHero";
+
+import { IProduct } from "../../types/product";
+
+import "./styles.css";
+
 const ProductCard = ({ id, title, description, price, brand, category, thumbnail, rating }: IProduct): ReactElement => {
     const nav = useNavigate();
     const dispatch = useDispatch();
@@ -26,20 +29,10 @@ const ProductCard = ({ id, title, description, price, brand, category, thumbnail
         }
     }
 
-    const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
-        event.currentTarget.src = "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg";
-    };
 
     return (
         <div className="reusable__card">
-            <div className="reusable__card__top">
-                <button disabled={loading} onClick={() => setEdit(!edit)} style={{ width: 20, height: 20, opacity: loading ? 0.8 : 1 }}>
-                    <EditIcon />
-                </button>
-                <button disabled={loading || edit} onClick={onDelete} style={{ width: 20, height: 20, opacity: loading ? 0.8 : 1 }}>
-                    <DeleteIcon />
-                </button>
-            </div>
+            <CardsHero loading={loading} edit={edit} setEdit={setEdit} onDelete={onDelete} />
             <Image src={thumbnail} alt={description} width={100} height={100} />
 
             {

@@ -1,21 +1,22 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { variables } from "../../utils/variables";
 import { getter } from "../../utils/api";
-import { useNavigate } from "react-router-dom";
-import { addProduct, setAll } from "../../store/reducers/products";
 import Pagination from "../reusable/pagination";
-import ProductCard from "./card";
 import Form from "../reusable/form";
 import PagesHero from "../reusable/pagesHero";
+import { addTodo, setAll } from "../../store/reducers/todos";
+import TodoCard from "./card";
 
 import { RootState } from "../../store/reducers";
-import { productsByLimit } from "../../types/api";
+import { todosByLimit } from "../../types/api";
 
-import "./styles.css";
-const AllProducts = (): ReactElement => {
-    const { total, products } = useSelector((state: RootState) => state.productSlice);
+import "./styles.css"
+const AllTodos = (): ReactElement => {
+    const { total, todos } = useSelector((state: RootState) => state.todoSlice);
+    const { user } = useSelector((state: RootState) => state.userSlice);
     const { pageLimit, skipLimit } = variables;
     const dispatch = useDispatch();
     const nav = useNavigate();
@@ -25,10 +26,10 @@ const AllProducts = (): ReactElement => {
     useEffect(() => {
         (async () => {
             setLoading(true)
-            const result = await getter(`products?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
+            const result = await getter(`todos?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
             if (result.ok && result.data) {
-                const productsData = result.data as productsByLimit
-                dispatch(setAll({ products: productsData.products, total: productsData.total }));
+                const postsData = result.data as todosByLimit
+                dispatch(setAll({ todos: postsData.todos, total: postsData.total }));
             }
             setLoading(false);
         })()
@@ -36,7 +37,7 @@ const AllProducts = (): ReactElement => {
     return (
         <div>
             <PagesHero
-                title={`All products: ${total}`}
+                title={`All todos: ${total}`}
                 add={add}
                 setAdd={setAdd}
                 loading={loading}
@@ -44,26 +45,21 @@ const AllProducts = (): ReactElement => {
             {
                 add && <div>
                     <Form
-                        name="products"
-                        isAddForm={{ updateValue: addProduct, add, setAdd, loading, setLoading }}
+                        name="todos"
+                        isAddForm={{ updateValue: addTodo, add, setAdd, loading, setLoading, value: { userId: user?.id ?? 1, todo: "", completed: false } }}
                         className="w-100 reusable__form__large"
                         inputs={[
-                            { name: "title", validate: { required: true, minLength: 3 } },
-                            { name: "brand", validate: { minLength: 5, required: true } },
-                            { name: "category", validate: { minLength: 5, required: true } },
-                            { name: "rating", validate: { minLength: 1, required: true, validate: (v) => { return !isNaN(Number(v)) || "only number" } } },
-                            { name: "price", validate: { minLength: 1, required: true, validate: (v) => { return !isNaN(Number(v)) || "only number" } } },
-                            { name: "description", validate: { minLength: 5, required: true } },
+                            { name: "todo", validate: { required: true, minLength: 3 } },
                         ]}
                         inputSize="large"
+
                     />
                 </div>
             }
-            <div className="products">
+            <div className="todos">
                 {
-                    products.map((p, index) => (
-                        <ProductCard key={index} {...p} />
-
+                    todos.map((t, index) => (
+                        <TodoCard key={index} {...t} />
                     ))
                 }
             </div>
@@ -77,4 +73,4 @@ const AllProducts = (): ReactElement => {
         </div>
     )
 }
-export default AllProducts
+export default AllTodos

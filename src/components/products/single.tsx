@@ -1,12 +1,15 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { RootState } from "../../store/reducers";
 import { setProduct } from "../../store/reducers/products";
 import { getter } from "../../utils/api";
 import { IProduct } from "../../types/product";
 import NotFound from "../notfound";
 import Image from "../reusable/image";
+
+import "./styles.css";
 
 const SingleProduct = (): ReactElement => {
     const { product } = useSelector((state: RootState) => state.productSlice);

@@ -1,21 +1,22 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { RootState } from "../../store/reducers";
 import { variables } from "../../utils/variables";
 import { getter } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
-import { addProduct, setAll } from "../../store/reducers/products";
 import Pagination from "../reusable/pagination";
-import ProductCard from "./card";
 import Form from "../reusable/form";
 import PagesHero from "../reusable/pagesHero";
+import { addPost, setAll } from "../../store/reducers/posts";
+import PostCard from "./card";
 
-import { RootState } from "../../store/reducers";
-import { productsByLimit } from "../../types/api";
+import { postsByLimit } from "../../types/api";
 
 import "./styles.css";
-const AllProducts = (): ReactElement => {
-    const { total, products } = useSelector((state: RootState) => state.productSlice);
+const AllProsts = (): ReactElement => {
+    const { total, posts } = useSelector((state: RootState) => state.postSlice);
+    const { user } = useSelector((state: RootState) => state.userSlice);
     const { pageLimit, skipLimit } = variables;
     const dispatch = useDispatch();
     const nav = useNavigate();
@@ -25,10 +26,10 @@ const AllProducts = (): ReactElement => {
     useEffect(() => {
         (async () => {
             setLoading(true)
-            const result = await getter(`products?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
+            const result = await getter(`posts?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
             if (result.ok && result.data) {
-                const productsData = result.data as productsByLimit
-                dispatch(setAll({ products: productsData.products, total: productsData.total }));
+                const postsData = result.data as postsByLimit
+                dispatch(setAll({ posts: postsData.posts, total: postsData.total }));
             }
             setLoading(false);
         })()
@@ -36,7 +37,7 @@ const AllProducts = (): ReactElement => {
     return (
         <div>
             <PagesHero
-                title={`All products: ${total}`}
+                title={`All posts: ${total}`}
                 add={add}
                 setAdd={setAdd}
                 loading={loading}
@@ -44,26 +45,25 @@ const AllProducts = (): ReactElement => {
             {
                 add && <div>
                     <Form
-                        name="products"
-                        isAddForm={{ updateValue: addProduct, add, setAdd, loading, setLoading }}
+                        name="posts"
+                        isAddForm={{ updateValue: addPost, add, setAdd, loading, setLoading, value: { userId: user?.id ?? 1, title: "", tags: ["new", "best"], body: "" } }}
                         className="w-100 reusable__form__large"
                         inputs={[
                             { name: "title", validate: { required: true, minLength: 3 } },
-                            { name: "brand", validate: { minLength: 5, required: true } },
-                            { name: "category", validate: { minLength: 5, required: true } },
-                            { name: "rating", validate: { minLength: 1, required: true, validate: (v) => { return !isNaN(Number(v)) || "only number" } } },
-                            { name: "price", validate: { minLength: 1, required: true, validate: (v) => { return !isNaN(Number(v)) || "only number" } } },
-                            { name: "description", validate: { minLength: 5, required: true } },
+                            { name: "body", validate: { minLength: 5, required: true } },
+                            { name: "tags", validate: { minLength: 3, required: true } },
                         ]}
                         inputSize="large"
+
                     />
                 </div>
             }
-            <div className="products">
+            <div className="posts">
                 {
-                    products.map((p, index) => (
-                        <ProductCard key={index} {...p} />
-
+                    posts.map((p, index) => (
+                        <PostCard
+                            key={index}  {...p}
+                        />
                     ))
                 }
             </div>
@@ -77,4 +77,4 @@ const AllProducts = (): ReactElement => {
         </div>
     )
 }
-export default AllProducts
+export default AllProsts

@@ -5,16 +5,15 @@ import { RootState } from "../../store/reducers";
 import { useNavigate } from "react-router-dom";
 import { getter } from "../../utils/api";
 import { addUser, setAll } from "../../store/reducers/users";
-import ActionButton from "../reusable/actionButton";
 import UserView from "./userView";
 import Pagination from "../reusable/pagination";
-
-import "./styles.css"
-
 import { variables } from "../../utils/variables";
 import { usersByLimit } from "../../types/api";
 import Form from "../reusable/form";
 import { Gender } from "../../types/hookForm";
+import PagesHero from "../reusable/pagesHero";
+
+import "./styles.css"
 
 const HomeComponent = (): ReactElement => {
     const nav = useNavigate();
@@ -38,10 +37,7 @@ const HomeComponent = (): ReactElement => {
 
     return (
         <div>
-            <div className="flex-row">
-                <h3>All users: {totalUsers}</h3>
-                <ActionButton text={add ? "Close form" : "Add user"} onClick={() => setAdd((a) => loading ? a : !a)} />
-            </div>
+            <PagesHero title={`All users: ${totalUsers}`} add={add} setAdd={setAdd} loading={loading} />
             {
                 add && <div>
                     <Form

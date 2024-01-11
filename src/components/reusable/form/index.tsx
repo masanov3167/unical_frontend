@@ -1,16 +1,21 @@
 import { Dispatch, ReactElement, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Input from "../input";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
+
+import Input from "../input";
 import { poster, putter } from "../../../utils/api";
 import { EditUser } from "../../../types/hookForm";
 import { EditIProduct } from "../../../types/product";
-import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
-
-import "./styles.css"
 import ActionButton from "../actionButton";
+
+import { AddIPost, EditIPost } from "../../../types/posts";
+import { AddITodo, EditITodo } from "../../../types/todo";
+
+import "./styles.css";
+
 type FormInputValidate = {
     required: boolean,
     minLength?: number,
@@ -21,10 +26,11 @@ type FormInput = {
     name: string,
     className?: string,
     disableLabel?: boolean,
-    validate: FormInputValidate
+    validate: FormInputValidate,
+    type?: "checkbox" | "text"
 }
 
-type FieldsType = EditUser | EditIProduct
+type FieldsType = EditUser | EditIProduct | EditIPost | AddIPost | AddITodo | EditITodo
 
 type isEditForm = {
     id: number,
@@ -42,9 +48,10 @@ type isAddForm = {
     setAdd: Dispatch<SetStateAction<boolean>>,
     loading: boolean,
     setLoading: Dispatch<SetStateAction<boolean>>,
+    value?: FieldsType
 }
 type Props = {
-    name: "users" | "products",
+    name: "users" | "products" | "posts" | "todos",
     className: string,
     inputs: FormInput[],
     isEditForm?: isEditForm,
@@ -61,7 +68,7 @@ const Form = ({ name, className, inputs, isEditForm, isAddForm, inputSize }: Pro
         handleSubmit,
         formState: { errors },
         reset
-    } = useForm<FieldsType>({ defaultValues: isEditForm?.value });
+    } = useForm<FieldsType>({ defaultValues: isEditForm?.value ?? isAddForm?.value });
 
     useEffect(() => {
         if (!isEditForm?.edit) reset();
@@ -69,6 +76,8 @@ const Form = ({ name, className, inputs, isEditForm, isAddForm, inputSize }: Pro
     }, [isEditForm, isAddForm, reset])
 
     const onSubmit = async (data: FieldsType) => {
+        console.log(data);
+
         if (isEditForm) {
             const { setLoading, id, updateValue, setEdit } = isEditForm;
             setLoading(true)
@@ -111,7 +120,9 @@ const Form = ({ name, className, inputs, isEditForm, isAddForm, inputSize }: Pro
                         minLength={i.validate.minLength ?? 3}
                         validate={i.validate.validate}
                         size={inputSize ?? "small"}
-                        disableLabel={inputSize !== "large"}
+                        disableLabel={inputSize !== "large" || i.type === "checkbox"}
+                        type={i.type}
+                        className={i.className}
                     />
                 })
             }

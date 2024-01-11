@@ -1,13 +1,15 @@
 import { ReactElement } from "react";
-import "./styles.css"
 import { useNavigate } from "react-router-dom";
-import { NotFoundIcon } from "../icons/display";
+
+import Icon from "../icons";
+
+import "./styles.css";
 const NotFound = (): ReactElement => {
     const navigate = useNavigate();
     return (
         <div className='not__found'>
             <div className='not__found__card'>
-                <NotFoundIcon />
+                <Icon name="notfound" />
                 <h1>404 – page not found</h1>
                 <button onClick={() => navigate("/")}>Go home</button>
             </div>

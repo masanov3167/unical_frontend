@@ -3,18 +3,15 @@ import Swal from "sweetalert2"
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-
-import "./styles.css";
-
-import { DeleteIcon, EditIcon } from "../icons/crud";
 import { deleteUser, updateUser } from "../../store/reducers/users";
 import { deleter } from "../../utils/api";
-
 import { userType } from "../../types/user";
 import { Gender } from "../../types/hookForm";
 import Form from "../reusable/form";
 import Image from "../reusable/image";
+import CardsHero from "../reusable/cardsHero";
 
+import "./styles.css";
 
 type UserTypeWithoutToken = Omit<userType, 'token'>;
 const UserView = (user: UserTypeWithoutToken): ReactElement => {
@@ -35,14 +32,7 @@ const UserView = (user: UserTypeWithoutToken): ReactElement => {
 
     return (
         <div className="reusable__card">
-            <div className="reusable__card__top">
-                <button disabled={loading} onClick={() => setEdit(!edit)} style={{ width: 20, height: 20, opacity: loading ? 0.8 : 1 }}>
-                    <EditIcon />
-                </button>
-                <button disabled={loading || edit} onClick={onDelete} style={{ width: 20, height: 20, opacity: loading ? 0.8 : 1 }}>
-                    <DeleteIcon />
-                </button>
-            </div>
+            <CardsHero loading={loading} edit={edit} setEdit={setEdit} onDelete={onDelete} />
             <Image src={user.image} alt={user.firstName} width={100} height={100} />
             {
                 edit ? (

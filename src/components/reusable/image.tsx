@@ -8,11 +8,12 @@ type Props = {
 }
 
 const Image = ({ src, alt, width, height }: Props): ReactElement => {
+    const path = "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg"
     const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
-        event.currentTarget.src = "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg";
+        event.currentTarget.src = path;
     };
     return (
-        <img src={src ?? "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg"} alt={alt ?? "image"} width={width} height={height}
+        <img src={src ?? path} alt={alt ?? "image"} width={width} height={height}
             onError={handleImageError}
         />
     )

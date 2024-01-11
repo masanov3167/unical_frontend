@@ -10,12 +10,13 @@ type InputProps<T extends FieldValues> = {
     className?: string,
     disableLabel?: boolean,
     validate?: (value: string) => true | string;
-    size?: "large" | "small"
+    size?: "large" | "small",
+    type?: "checkbox" | "text"
 }
 
-const Input = <T extends FieldValues>({ register, error, required, minLength, name, className, disableLabel, validate, size }: InputProps<T>): ReactElement => {
+const Input = <T extends FieldValues>({ register, error, required, minLength, name, className, disableLabel, validate, size, type }: InputProps<T>): ReactElement => {
     return (
-        <div className={`${className} ${size === "small" ? "small__form__input" : undefined}`} style={{ marginTop: "5px" }}>
+        <div className={`${className ?? ""} ${size === "small" ? "small__form__input" : ""}`} style={{ marginTop: "5px" }}>
             {
                 !disableLabel && <h3 style={{ color: error ? "red" : "black" }}>Write {name}</h3>
             }
@@ -30,7 +31,11 @@ const Input = <T extends FieldValues>({ register, error, required, minLength, na
                 style={{
                     border: error ? '1px solid red' : '1px solid #ccc',
                 }}
+                type={type ?? "text"}
             />
+            {
+                type === "checkbox" && <h4>{error ? "Complete error : " : "Completed"}</h4>
+            }
             {error && (
                 <p style={{ color: 'red' }}>{error.message}</p>
             )}

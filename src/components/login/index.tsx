@@ -7,11 +7,11 @@ import { poster } from "../../utils/api";
 import { setCookie } from "../../utils/functions";
 import { useDispatch } from "react-redux";
 import { loginAction } from "../../store/reducers/users";
+import { variables } from "../../utils/variables";
 
 import { Auth } from "../../types/hookForm";
 
 import "./styles.css"
-import { variables } from "../../utils/variables";
 
 const LoginComponent = (): ReactElement => {
     const [errorText, setErrorText] = useState<string>("");

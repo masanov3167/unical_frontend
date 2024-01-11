@@ -1,0 +1,28 @@
+.todos{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 30px 0;
+}
+
+.checkbox__input{
+    border: 1px solid rgb(204, 204, 204);
+    box-shadow: 0px 4px 18px 0px rgba(51, 51, 51, 0.04);
+    width: 100%;
+    border-radius: 6px;
+    height: 47px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+}
+.checkbox__input input{
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+.checkbox__input h4{
+    margin-left: 5px;
+}
+.checkbox__input p{
+    font-weight: 600;
+}

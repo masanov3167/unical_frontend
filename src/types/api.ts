@@ -1,5 +1,7 @@
 import { Auth, EditUser } from "./hookForm"
+import { IPost } from "./posts"
 import { IProduct } from "./product"
+import { ITodo } from "./todo"
 import { userType } from "./user"
 
 //post datas function tpes
@@ -27,7 +29,15 @@ export type productsByLimit = {
     products: IProduct[],
     total: number
 }
-export type returnGetTypeData = usersByLimit | productsByLimit | IProduct | null
+export type postsByLimit = {
+    posts: IPost[],
+    total: number
+}
+export type todosByLimit = {
+    todos: ITodo[],
+    total: number
+}
+export type returnGetTypeData = usersByLimit | productsByLimit | IProduct | postsByLimit | IPost | todosByLimit | ITodo | null
 
 //delete datas function type
 export type returnDeleteType = {
