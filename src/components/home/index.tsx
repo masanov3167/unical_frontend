@@ -1,63 +1,41 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useForm } from "react-hook-form";
-import Swal from "sweetalert2";
 
 import { RootState } from "../../store/reducers";
 import { useNavigate } from "react-router-dom";
-import { getter, poster } from "../../utils/api";
-import { addUser, getAll } from "../../store/reducers/users";
+import { getter } from "../../utils/api";
+import { addUser, setAll } from "../../store/reducers/users";
 import ActionButton from "../reusable/actionButton";
 import UserView from "./userView";
 import Pagination from "../reusable/pagination";
-import FormUser from "../reusable/formuser";
 
 import "./styles.css"
 
-import { EditUser } from "../../types/hookForm";
+import { variables } from "../../utils/variables";
+import { usersByLimit } from "../../types/api";
+import Form from "../reusable/form";
+import { Gender } from "../../types/hookForm";
 
 const HomeComponent = (): ReactElement => {
     const nav = useNavigate();
     const { users, totalUsers } = useSelector((state: RootState) => state.userSlice);
+    const { pageLimit, skipLimit } = variables
     const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const [add, setAdd] = useState<boolean>(false);
-    const limit = 15;
-    const skip = 15;
     useEffect(() => {
         (async () => {
             setLoading(true)
-            const result = await getter(`users?limit=${limit}&skip=${currentPage * skip}`, nav);
+            const result = await getter(`users?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
             if (result.ok && result.data) {
-                dispatch(getAll({ users: result.data.users, total: result.data.total }));
+                const usersData = result.data as usersByLimit;
+                dispatch(setAll({ users: usersData.users, total: usersData.total }));
             }
             setLoading(false);
         })()
     }, [currentPage, dispatch, nav]);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset
-    } = useForm<EditUser>();
-
-    const onSubmit = async (data: EditUser) => {
-        setLoading(true)
-        const result = await poster("users/add", { data: { ...data, image: "https://robohash.org/Terry.png?set=set4" }, json: true }, nav);
-        setLoading(false)
-        if (result.ok && result.data) {
-            dispatch(addUser(result.data));
-            setAdd(false);
-            reset();
-        } else {
-            Swal.fire("Error", result.msg)
-        }
-    }
-    useEffect(() => {
-        if (!add) reset()
-    }, [add, reset])
     return (
         <div>
             <div className="flex-row">
@@ -66,28 +44,25 @@ const HomeComponent = (): ReactElement => {
             </div>
             {
                 add && <div>
-                    <FormUser
-                        onSubmit={handleSubmit(onSubmit)}
-                        register={register}
-                        errors={errors}
-                        loading={loading}
-                        className="add__user__form"
+                    <Form
+                        name="users"
+                        isAddForm={{ updateValue: addUser, add, setAdd, loading, setLoading }}
+                        className="w-100 reusable__form__large"
+                        inputs={[
+                            { name: "firstName", validate: { required: true, minLength: 4 } },
+                            { name: "lastName", validate: { required: true, minLength: 4 } },
+                            { name: "username", validate: { required: true, minLength: 4 } },
+                            { name: "email", validate: { required: true, minLength: 4 } },
+                            { name: "gender", validate: { required: true, minLength: 4, validate: (value) => Object.values(Gender).includes(value as Gender) || 'Invalid gender' } },
+                        ]}
+                        inputSize="large"
                     />
                 </div>
             }
             <div className="users">
                 {
                     users.map((u, index) => (
-                        <UserView
-                            key={index}
-                            firstName={u.firstName}
-                            lastName={u.lastName}
-                            username={u.username}
-                            email={u.email}
-                            gender={u.gender}
-                            image={u.image}
-                            id={u.id}
-                        />
+                        <UserView key={index} {...u} />
                     ))
                 }
             </div>
@@ -95,7 +70,7 @@ const HomeComponent = (): ReactElement => {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 totalUsers={totalUsers}
-                limit={limit}
+                limit={pageLimit}
                 loading={loading}
             />
         </div>

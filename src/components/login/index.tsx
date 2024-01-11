@@ -11,6 +11,7 @@ import { loginAction } from "../../store/reducers/users";
 import { Auth } from "../../types/hookForm";
 
 import "./styles.css"
+import { variables } from "../../utils/variables";
 
 const LoginComponent = (): ReactElement => {
     const [errorText, setErrorText] = useState<string>("");
@@ -25,7 +26,7 @@ const LoginComponent = (): ReactElement => {
     const onSubmit = async (e: Auth) => {
         const result = await poster("auth/login", { data: e, json: true });
         if (result.ok && result.data) {
-            setCookie("token", result.data.token, 60);
+            setCookie("token", result.data.token, variables.tokenExpireMinute);
             dispatch(loginAction(result.data));
             nav("/");
         }

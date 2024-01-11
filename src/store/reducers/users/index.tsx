@@ -25,7 +25,7 @@ const userSlice = createSlice({
             state.user = action.payload
             return state
         },
-        getAll: (state, action: PayloadAction<{ users: userType[], total: number }>) => {
+        setAll: (state, action: PayloadAction<{ users: userType[], total: number }>) => {
             state.users = action.payload.users;
             state.totalUsers = action.payload.total
             return state
@@ -57,5 +57,5 @@ const userSlice = createSlice({
     }
 });
 
-export const { loginAction, getAll, deleteUser, updateUser, addUser } = userSlice.actions;
+export const { loginAction, setAll, deleteUser, updateUser, addUser } = userSlice.actions;
 export default userSlice.reducer;

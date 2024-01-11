@@ -1,19 +1,19 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import Swal from "sweetalert2"
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
 
 
 import "./styles.css";
 
 import { DeleteIcon, EditIcon } from "../icons/crud";
 import { deleteUser, updateUser } from "../../store/reducers/users";
-import { deleter, putter } from "../../utils/api";
-import FormUser from "../reusable/formuser";
+import { deleter } from "../../utils/api";
 
 import { userType } from "../../types/user";
-import { EditUser } from "../../types/hookForm";
+import { Gender } from "../../types/hookForm";
+import Form from "../reusable/form";
+import Image from "../reusable/image";
 
 
 type UserTypeWithoutToken = Omit<userType, 'token'>;
@@ -33,32 +33,9 @@ const UserView = (user: UserTypeWithoutToken): ReactElement => {
         }
     }
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset
-    } = useForm<EditUser>({ defaultValues: user });
-
-    useEffect(() => {
-        if (!edit) reset()
-    }, [edit, reset])
-
-    const onSubmit = async (data: EditUser) => {
-        setLoading(true)
-        const result = await putter(`users/${user.id}`, { data, json: true }, nav);
-        setLoading(false)
-        if (result.ok && result.data) {
-            dispatch(updateUser(result.data));
-            setEdit(false);
-            reset();
-        } else {
-            Swal.fire("Error", result.msg)
-        }
-    }
     return (
-        <div className="users__card">
-            <div className="users__card__top">
+        <div className="reusable__card">
+            <div className="reusable__card__top">
                 <button disabled={loading} onClick={() => setEdit(!edit)} style={{ width: 20, height: 20, opacity: loading ? 0.8 : 1 }}>
                     <EditIcon />
                 </button>
@@ -66,15 +43,20 @@ const UserView = (user: UserTypeWithoutToken): ReactElement => {
                     <DeleteIcon />
                 </button>
             </div>
-            <img src={user.image} alt={user.firstName} width={100} height={100} />
+            <Image src={user.image} alt={user.firstName} width={100} height={100} />
             {
                 edit ? (
-                    <FormUser
-                        onSubmit={handleSubmit(onSubmit)}
-                        register={register}
-                        errors={errors}
-                        loading={loading}
-                        isEditForm
+                    <Form
+                        name="users"
+                        isEditForm={{ value: user, id: user.id, updateValue: updateUser, edit, setEdit, loading, setLoading }}
+                        className="w-100"
+                        inputs={[
+                            { name: "firstName", validate: { required: true, minLength: 4 } },
+                            { name: "lastName", validate: { required: true, minLength: 4 } },
+                            { name: "username", validate: { required: true, minLength: 4 } },
+                            { name: "email", validate: { required: true, minLength: 4 } },
+                            { name: "gender", validate: { required: true, minLength: 4, validate: (value) => Object.values(Gender).includes(value as Gender) || 'Invalid gender' } },
+                        ]}
                     />
                 ) : (
                     <ol>

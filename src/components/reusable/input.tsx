@@ -10,11 +10,12 @@ type InputProps<T extends FieldValues> = {
     className?: string,
     disableLabel?: boolean,
     validate?: (value: string) => true | string;
+    size?: "large" | "small"
 }
 
-const Input = <T extends FieldValues>({ register, error, required, minLength, name, className, disableLabel, validate }: InputProps<T>): ReactElement => {
+const Input = <T extends FieldValues>({ register, error, required, minLength, name, className, disableLabel, validate, size }: InputProps<T>): ReactElement => {
     return (
-        <div className={className} style={{ marginTop: "5px" }}>
+        <div className={`${className} ${size === "small" ? "small__form__input" : undefined}`} style={{ marginTop: "5px" }}>
             {
                 !disableLabel && <h3 style={{ color: error ? "red" : "black" }}>Write {name}</h3>
             }

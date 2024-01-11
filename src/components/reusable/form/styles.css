@@ -1,0 +1,29 @@
+.small__form__input input{
+    padding: 3px;
+    height: 25px;
+    font-size: 12px;
+}
+.small__form__input h3{
+    font-size: 12px;
+}
+.small__form__input p{
+    font-size: 10px;
+}
+
+.reusable__form__button{
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.reusable__form__large{
+    margin: 30px auto;
+}
+
+.reusable__form__large .reusable__form__button button{
+    padding: 12px 0;
+    width: 200px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
