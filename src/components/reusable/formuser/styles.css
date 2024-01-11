@@ -1,0 +1,13 @@
+.users__card__input p{
+    font-size: 10px;
+}
+.users__card__input input{
+    padding: 3px;
+    height: 25px;
+    font-size: 12px;
+}
+.users__card__button{
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+}
