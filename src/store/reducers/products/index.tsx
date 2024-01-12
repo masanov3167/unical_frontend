@@ -3,7 +3,6 @@ import { IProduct } from "../../../types/product";
 
 
 type State = {
-    product?: IProduct,
     products: IProduct[],
     total: number
 };
@@ -46,13 +45,9 @@ const ProductSlice = createSlice({
             state.total += 1
             return state
         },
-        setProduct: (state, action: PayloadAction<IProduct>) => {
-            const product = action.payload
-            state.product = product
-            return state
-        }
+
     }
 });
 
-export const { setAll, deleteProduct, updateProduct, addProduct, setProduct } = ProductSlice.actions;
+export const { setAll, deleteProduct, updateProduct, addProduct } = ProductSlice.actions;
 export default ProductSlice.reducer;

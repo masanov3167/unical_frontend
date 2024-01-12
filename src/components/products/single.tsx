@@ -1,10 +1,7 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { ReactElement } from "react";
+import { useParams } from "react-router-dom";
 
-import { RootState } from "../../store/reducers";
-import { setProduct } from "../../store/reducers/products";
-import { getter, useGet } from "../../utils/api";
+import { useGet } from "../../utils/api";
 import { IProduct } from "../../types/product";
 import NotFound from "../notfound";
 import Image from "../reusable/image";

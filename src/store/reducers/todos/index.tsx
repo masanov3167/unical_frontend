@@ -3,7 +3,6 @@ import { ITodo } from "../../../types/todo";
 
 
 type State = {
-    todo?: ITodo,
     todos: ITodo[],
     total: number
 };
@@ -45,14 +44,9 @@ const TodoSlice = createSlice({
             state.todos.unshift(todo)
             state.total += 1
             return state
-        },
-        setTodo: (state, action: PayloadAction<ITodo>) => {
-            const todo = action.payload
-            state.todo = todo
-            return state
         }
     }
 });
 
-export const { setAll, deleteTodo, updateTodo, addTodo, setTodo } = TodoSlice.actions;
+export const { setAll, deleteTodo, updateTodo, addTodo } = TodoSlice.actions;
 export default TodoSlice.reducer;

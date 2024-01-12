@@ -3,7 +3,6 @@ import { IPost } from "../../../types/posts";
 
 
 type State = {
-    post?: IPost,
     posts: IPost[],
     total: number
 };
@@ -46,13 +45,9 @@ const PostSlice = createSlice({
             state.total += 1
             return state
         },
-        setPost: (state, action: PayloadAction<IPost>) => {
-            const post = action.payload
-            state.post = post
-            return state
-        }
+
     }
 });
 
-export const { setAll, deletePost, updatePost, addPost, setPost } = PostSlice.actions;
+export const { setAll, deletePost, updatePost, addPost } = PostSlice.actions;
 export default PostSlice.reducer;
