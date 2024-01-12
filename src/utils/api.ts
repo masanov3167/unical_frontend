@@ -1,10 +1,11 @@
-import { NavigateFunction } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { getCookie } from "./functions";
 import { variables } from "./variables";
 
-import { postBodyType, returnDeleteType, returnGetType, returnPostType, returnPutType } from "../types/api";
+import { postBodyType, returnDeleteType, returnGetType, returnGetTypeData, returnPostType, returnPutType } from "../types/api";
+import { QueryKey, useQuery } from "react-query";
 
 export const poster = async (
   url: string,
@@ -77,7 +78,7 @@ export const getter = async (url: string, nav: NavigateFunction) => {
       throw new Error(response.data.message ?? 'Request failed');
     }
   } catch (error) {
-    result.msg = JSON.stringify(error)
+    result.msg = String(error)
     return result;
   }
 };
@@ -154,4 +155,34 @@ export const putter = async (
     result.msg = JSON.stringify(error);
     return result;
   }
+};
+
+export const useGet = <T>(
+  url: string,
+  enabled?: boolean
+): {
+  error: Error | null;
+  data: T | undefined;
+  isLoading: boolean;
+  refetch: () => void;
+} => {
+  const nav = useNavigate();
+
+  const { isLoading, error, data, refetch } = useQuery<T, Error>(
+    url,
+    async () => {
+      const result = await getter(url, nav);
+      if (result.ok && result.data) {
+        return result.data as T; // Type assertion
+      } else {
+        throw new Error(result.msg ?? 'Failed to fetch data');
+      }
+    },
+    {
+      enabled,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  return { error, data, isLoading, refetch }; // Use 'isLoading' for consistency
 };

@@ -9,6 +9,7 @@ import Pagination from "../reusable/pagination";
 import ProductCard from "./card";
 import Form from "../reusable/form";
 import PagesHero from "../reusable/pagesHero";
+import Loading from "../reusable/loading";
 
 import { RootState } from "../../store/reducers";
 import { productsByLimit } from "../../types/api";
@@ -22,6 +23,7 @@ const AllProducts = (): ReactElement => {
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const [add, setAdd] = useState<boolean>(false);
+    const [visibleLoader, setVisibleLoader] = useState<boolean>(true)
     useEffect(() => {
         (async () => {
             setLoading(true)
@@ -31,8 +33,14 @@ const AllProducts = (): ReactElement => {
                 dispatch(setAll({ products: productsData.products, total: productsData.total }));
             }
             setLoading(false);
+            setVisibleLoader(false)
         })()
     }, [currentPage, dispatch, nav]);
+
+    if (visibleLoader) {
+        return <Loading />
+    }
+
     return (
         <div>
             <PagesHero

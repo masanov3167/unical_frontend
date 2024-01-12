@@ -9,6 +9,7 @@ import Form from "../reusable/form";
 import PagesHero from "../reusable/pagesHero";
 import { addTodo, setAll } from "../../store/reducers/todos";
 import TodoCard from "./card";
+import Loading from "../reusable/loading";
 
 import { RootState } from "../../store/reducers";
 import { todosByLimit } from "../../types/api";
@@ -23,6 +24,7 @@ const AllTodos = (): ReactElement => {
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const [add, setAdd] = useState<boolean>(false);
+    const [visibleLoader, setVisibleLoader] = useState<boolean>(true)
     useEffect(() => {
         (async () => {
             setLoading(true)
@@ -32,8 +34,14 @@ const AllTodos = (): ReactElement => {
                 dispatch(setAll({ todos: postsData.todos, total: postsData.total }));
             }
             setLoading(false);
+            setVisibleLoader(false)
         })()
     }, [currentPage, dispatch, nav]);
+
+    if (visibleLoader) {
+        return <Loading />
+    }
+
     return (
         <div>
             <PagesHero

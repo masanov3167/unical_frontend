@@ -1,40 +1,26 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { ReactElement } from "react";
+import { useParams } from "react-router-dom";
 
-import { RootState } from "../../store/reducers";
-import { getter } from "../../utils/api";
+import { useGet } from "../../utils/api";
 import NotFound from "../notfound";
-import { setTodo } from "../../store/reducers/todos";
+import Loading from "../reusable/loading";
 
 import { ITodo } from "../../types/todo";
 
 import "./styles.css";
 const SingleTodo = (): ReactElement => {
-    const { todo } = useSelector((state: RootState) => state.todoSlice);
-    const dispatch = useDispatch();
     const { id } = useParams();
-    const nav = useNavigate();
-    const [loading, setLoading] = useState<boolean>(false);
-
-    useEffect(() => {
-        (async () => {
-            const regex = /^[0-9]+$/;
-            if (id && regex.test(id)) {
-                setLoading(true)
-                const result = await getter(`todos/${id}`, nav);
-                setLoading(false)
-                if (result.ok && result.data) {
-                    dispatch(setTodo(result.data as ITodo))
-                }
-            }
-        })()
-    }, [id]);
+    const regex = /^[0-9]+$/;
+    const enabled = id ? regex.test(id) : false;
+    const { error, data: todo, isLoading: loading } = useGet<ITodo>(`todos/${id}`, enabled);
 
     if (loading) {
-        return <div>Loading...</div>
+        return <Loading />
     }
 
+    if (error) {
+        return <div>Error: {error?.message ?? "Failed"}</div>
+    }
     if (!loading && !todo) {
         return <NotFound />
     }

@@ -12,6 +12,7 @@ import { usersByLimit } from "../../types/api";
 import Form from "../reusable/form";
 import { Gender } from "../../types/hookForm";
 import PagesHero from "../reusable/pagesHero";
+import Loading from "../reusable/loading";
 
 import "./styles.css"
 
@@ -22,6 +23,7 @@ const HomeComponent = (): ReactElement => {
     const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
+    const [visibleLoader, setVisibleLoader] = useState<boolean>(true)
     const [add, setAdd] = useState<boolean>(false);
     useEffect(() => {
         (async () => {
@@ -32,8 +34,13 @@ const HomeComponent = (): ReactElement => {
                 dispatch(setAll({ users: usersData.users, total: usersData.total }));
             }
             setLoading(false);
-        })()
+            setVisibleLoader(false)
+        })();
     }, [currentPage, dispatch, nav]);
+
+    if (visibleLoader) {
+        return <Loading />
+    }
 
     return (
         <div>

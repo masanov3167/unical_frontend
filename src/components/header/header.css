@@ -11,9 +11,7 @@
 .header__logo{
     text-transform: uppercase;
 }
-.header__nav{
-    list-style: none;
-}
+
 .header__nav__items{
     margin-left: 20px;
     display: block;

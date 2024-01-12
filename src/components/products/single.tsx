@@ -4,39 +4,29 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { RootState } from "../../store/reducers";
 import { setProduct } from "../../store/reducers/products";
-import { getter } from "../../utils/api";
+import { getter, useGet } from "../../utils/api";
 import { IProduct } from "../../types/product";
 import NotFound from "../notfound";
 import Image from "../reusable/image";
+import Loading from "../reusable/loading";
 
 import "./styles.css";
 
 const SingleProduct = (): ReactElement => {
-    const { product } = useSelector((state: RootState) => state.productSlice);
-    const dispatch = useDispatch();
     const { id } = useParams();
-    const nav = useNavigate();
-    const [loading, setLoading] = useState<boolean>(false);
+    const regex = /^[0-9]+$/;
+    const enabled = id ? regex.test(id) : false;
+    const { error, data: product, isLoading } = useGet<IProduct>(`products/${id}`, enabled);
 
-    useEffect(() => {
-        (async () => {
-            const regex = /^[0-9]+$/;
-            if (id && regex.test(id)) {
-                setLoading(true)
-                const result = await getter(`products/${id}`, nav);
-                setLoading(false)
-                if (result.ok && result.data) {
-                    dispatch(setProduct(result.data as IProduct))
-                }
-            }
-        })()
-    }, [id]);
-
-    if (loading) {
-        return <div>Loading...</div>
+    if (isLoading) {
+        return <Loading />
     }
 
-    if (!loading && !product) {
+    if (error) {
+        return <div>Error: {error?.message ?? "Failed"}</div>
+    }
+
+    if (!isLoading && !product) {
         return <NotFound />
     }
 

@@ -5,3 +5,8 @@
     padding: 5px 20px;
     color: white;
 }
+.loading{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

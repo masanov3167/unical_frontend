@@ -1,41 +1,28 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { ReactElement } from "react";
+import { useParams } from "react-router-dom";
 
 import NotFound from "../notfound";
-import { getter } from "../../utils/api";
-import { setPost } from "../../store/reducers/posts";
+import { useGet } from "../../utils/api";
+import Loading from "../reusable/loading";
 
-import { RootState } from "../../store/reducers";
 import { IPost } from "../../types/posts";
 
 import "./styles.css";
 const SinglePost = (): ReactElement => {
-    const { post } = useSelector((state: RootState) => state.postSlice);
-    const dispatch = useDispatch();
     const { id } = useParams();
-    const nav = useNavigate();
-    const [loading, setLoading] = useState<boolean>(false);
+    const regex = /^[0-9]+$/;
+    const enabled = id ? regex.test(id) : false;
+    const { error, data: post, isLoading } = useGet<IPost>(`posts/${id}`, enabled);
 
-    useEffect(() => {
-        (async () => {
-            const regex = /^[0-9]+$/;
-            if (id && regex.test(id)) {
-                setLoading(true)
-                const result = await getter(`posts/${id}`, nav);
-                setLoading(false)
-                if (result.ok && result.data) {
-                    dispatch(setPost(result.data as IPost))
-                }
-            }
-        })()
-    }, [id]);
-
-    if (loading) {
-        return <div>Loading...</div>
+    if (isLoading) {
+        return <Loading />
     }
 
-    if (!loading && !post) {
+    if (error) {
+        return <div>Error: {error?.message ?? "Failed"}</div>
+    }
+
+    if (!isLoading && !post) {
         return <NotFound />
     }
 
@@ -44,16 +31,14 @@ const SinglePost = (): ReactElement => {
         <div>
             {
                 post && (
-                    <div>
-                        <ol style={{ listStyle: "none" }}>
-                            <li style={{ display: "flex" }}><h4>Title  </h4> <span>: {post.title}</span></li>
-                            <li style={{ display: "flex" }}><h4>Body</h4> <span>: {post.body}</span></li>
-                            <li style={{ display: "flex" }}><h4>Tags </h4>  <span>: {typeof post.tags === "string" ? `#${String(post.tags).split(",").join(" #")}` : `#${post.tags.join(" #")}`}</span></li>
-                        </ol>
-
-                    </div>
+                    <ol >
+                        <li style={{ display: "flex" }}><h4>Title  </h4> <span>: {post.title}</span></li>
+                        <li style={{ display: "flex" }}><h4>Body</h4> <span>: {post.body}</span></li>
+                        <li style={{ display: "flex" }}><h4>Tags </h4>  <span>: {typeof post.tags === "string" ? `#${String(post.tags).split(",").join(" #")}` : `#${post.tags.join(" #")}`}</span></li>
+                    </ol>
                 )
             }
+
         </div>
     )
 }

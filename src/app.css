@@ -36,7 +36,6 @@
     cursor: pointer;
 }
 .reusable__card ol{
-    list-style: none;
     margin: 10px;
 }
 .reusable__card ol li{
