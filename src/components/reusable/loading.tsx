@@ -5,7 +5,7 @@ import "./styles.css";
 const Loading = (): ReactElement => {
     return (
         <div className="loading">
-            <Image src="https://i.pinimg.com/originals/07/bf/6f/07bf6f0f7d5dd64829822e95e97f908d.gif" alt="loading" width={500} height={500} />
+            <Image src="https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif" alt="loading" width={400} height={400} />
         </div>
     )
 }
