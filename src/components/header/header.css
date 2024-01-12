@@ -21,3 +21,9 @@
 .header__nav__items a{
     color: black;
 }
+.header__nav__items button{
+    padding: 5px 7px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}

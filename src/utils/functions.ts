@@ -23,7 +23,8 @@ export const setCookie = (key: string, value: any, expiresInMinutes: number) => 
             cookie = cookie.substring(1);
         }
         if (cookie.indexOf(name) === 0) {
-            return cookie.substring(name.length, cookie.length);
+            const value = cookie.substring(name.length, cookie.length);
+            return JSON.parse(value);
         }
         }
         return null;
