@@ -37,6 +37,7 @@
 }
 .reusable__card ol{
     margin: 10px;
+    width: 100%;
 }
 .reusable__card ol li{
     text-align: left;
@@ -54,4 +55,5 @@
     border-radius: 10px;
     padding: 5px;
     color: white;
+    width: 100%;
 }

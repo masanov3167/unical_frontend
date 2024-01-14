@@ -5,6 +5,22 @@
     margin: 30px 0;
 }
 
+.products >div{
+    height: 350px;
+}
+.products >div >ol >li:first-child{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.products > div > ol >li:nth-child(6){
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    -webkit-line-clamp: 2; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
 .product__edit__form{
     width: 100%
 }

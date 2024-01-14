@@ -4,8 +4,8 @@ import axios from "axios";
 import { getCookie } from "./functions";
 import { variables } from "./variables";
 
-import { postBodyType, returnDeleteType, returnGetType, returnGetTypeData, returnPostType, returnPutType } from "../types/api";
-import { QueryKey, useQuery } from "react-query";
+import { postBodyType, returnDeleteType, returnGetType,  returnPostType, returnPutType } from "../types/api";
+import {  useQuery } from "react-query";
 
 export const poster = async (
   url: string,
@@ -40,12 +40,12 @@ export const poster = async (
       result.data = response.data; 
       result.msg = 'ok';
     } else {
-      result.msg = response.data.message || 'Request failed';
+      result.msg = response.data?.message || 'Request failed';
     }
 
     return result;
   } catch (error) {
-    result.msg = JSON.stringify(error)
+    result.msg = String(error);
     return result;
   }
 };
@@ -73,10 +73,10 @@ export const getter = async (url: string, nav: NavigateFunction) => {
       result.ok = true;
       result.data = response.data; 
       result.msg = response.data.message ?? 'ok';
-      return result;
     } else {
-      throw new Error(response.data.message ?? 'Request failed');
+      result.msg = response.data?.message || 'Request failed';
     }
+    return result
   } catch (error) {
     result.msg = String(error)
     return result;
@@ -107,13 +107,12 @@ export const deleter = async (url: string, nav?: NavigateFunction) => {
       result.ok = true;
       result.data = { id: response.data.id };
       result.msg = 'ok';
-      return result;
     } else {
-      result.msg = response.data.message ?? response.statusText; 
-      return result;
+      result.msg = response.data?.message || 'Request failed';
     }
+    return result;
   } catch (error) {
-    result.msg = JSON.stringify(error);
+    result.msg = String(error)
     return result;
   }
 };
@@ -147,12 +146,12 @@ export const putter = async (
       result.data = response.data;
       result.msg = 'ok';
     } else {
-      result.msg = response.data.message || 'Request failed';
+      result.msg = response.data?.message || 'Request failed';
     }
 
     return result;
   } catch (error) {
-    result.msg = JSON.stringify(error);
+    result.msg = String(error)
     return result;
   }
 };
@@ -173,7 +172,7 @@ export const useGet = <T>(
     async () => {
       const result = await getter(url, nav);
       if (result.ok && result.data) {
-        return result.data as T; // Type assertion
+        return result.data as T; 
       } else {
         throw new Error(result.msg ?? 'Failed to fetch data');
       }
@@ -184,5 +183,5 @@ export const useGet = <T>(
     }
   );
 
-  return { error, data, isLoading, refetch }; // Use 'isLoading' for consistency
+  return { error, data, isLoading, refetch }; 
 };
