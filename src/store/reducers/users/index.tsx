@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { userType } from "../../../types/user";
 import { decodeJWT, getCookie } from "../../../utils/functions";
+import { IUser } from "../../../types/user";
 
 
 type State = {
-    user?: userType,
-    users: userType[],
+    user?: IUser,
+    users: IUser[],
     totalUsers: number
 };
 
@@ -21,11 +21,11 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        loginAction: (state, action: PayloadAction<userType>) => {
+        loginAction: (state, action: PayloadAction<IUser>) => {
             state.user = action.payload
             return state
         },
-        setAll: (state, action: PayloadAction<{ users: userType[], total: number }>) => {
+        setAll: (state, action: PayloadAction<{ users: IUser[], total: number }>) => {
             state.users = action.payload.users;
             state.totalUsers = action.payload.total
             return state
@@ -36,7 +36,7 @@ const userSlice = createSlice({
             state.totalUsers -= 1
             return state
         },
-        updateUser: (state, action: PayloadAction<userType>) => {
+        updateUser: (state, action: PayloadAction<IUser>) => {
             const user = action.payload
             const filter = state.users.map(u => {
                 if (u.id === user.id) {
@@ -48,7 +48,7 @@ const userSlice = createSlice({
             state.users = filter
             return state
         },
-        addUser: (state, action: PayloadAction<userType>) => {
+        addUser: (state, action: PayloadAction<IUser>) => {
             const user = action.payload
             state.users.unshift(user)
             state.totalUsers += 1

@@ -9,7 +9,8 @@ import { useDispatch } from "react-redux";
 import { loginAction } from "../../store/reducers/users";
 import { variables } from "../../utils/variables";
 
-import { Auth } from "../../types/hookForm";
+import { IAuth } from "../../types/hookForm";
+import { IUser } from "../../types/user";
 
 import "./styles.css"
 
@@ -21,10 +22,10 @@ const LoginComponent = (): ReactElement => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<Auth>();
+    } = useForm<IAuth>();
 
-    const onSubmit = async (e: Auth) => {
-        const result = await poster("auth/login", { data: e, json: true });
+    const onSubmit = async (e: IAuth) => {
+        const result = await poster<IUser, IAuth>("auth/login", { data: e, json: true });
         if (result.ok && result.data) {
             setCookie("token", result.data.token, variables.tokenExpireMinute);
             dispatch(loginAction(result.data));

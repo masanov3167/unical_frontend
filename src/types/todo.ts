@@ -5,13 +5,13 @@ export type ITodo = {
     userId: number
 }
 
-export type AddITodo = {
+export type IAddTodo = {
     todo:string,
     completed: boolean,
     userId: number
 }
 
-export type EditITodo = {
+export type IEditTodo = {
     todo:string,
     completed: boolean,
 }

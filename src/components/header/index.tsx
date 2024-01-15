@@ -1,13 +1,15 @@
 import { ReactElement } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import { RootState } from "../../store/reducers";
+import { removeCookie } from "../../utils/functions";
+
+import { IRootState } from "../../store/reducers";
 
 import "./header.css"
-import { removeCookie } from "../../utils/functions";
-import { useNavigate } from "react-router-dom";
+
 const Header = (): ReactElement => {
-    const { user } = useSelector((state: RootState) => state.userSlice);
+    const { user } = useSelector((state: IRootState) => state.userSlice);
     const currentPath = window.location.pathname;
     const isLoginPage = currentPath === "/login";
     const navigate = useNavigate();

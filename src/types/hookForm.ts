@@ -1,8 +1,8 @@
-export type Auth ={
+export type IAuth ={
     username:string,
     password:string
 }
-export type EditUser = {
+export type IEditUser = {
     username: string;
     email: string;
     firstName: string;
@@ -10,7 +10,7 @@ export type EditUser = {
     gender: string;
 }
 
-export enum Gender {
+export enum IGender {
     Male = 'male',
     Female = 'female',
 }

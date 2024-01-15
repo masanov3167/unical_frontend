@@ -1,7 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "../../store/reducers";
 import { variables } from "../../utils/variables";
 import { getter } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
@@ -12,12 +11,13 @@ import { addPost, setAll } from "../../store/reducers/posts";
 import PostCard from "./card";
 import Loading from "../reusable/loading";
 
-import { postsByLimit } from "../../types/api";
+import { IPostsLimited } from "../../types/api";
+import { IRootState } from "../../store/reducers";
 
 import "./styles.css";
 const AllProsts = (): ReactElement => {
-    const { total, posts } = useSelector((state: RootState) => state.postSlice);
-    const { user } = useSelector((state: RootState) => state.userSlice);
+    const { total, posts } = useSelector((state: IRootState) => state.postSlice);
+    const { user } = useSelector((state: IRootState) => state.userSlice);
     const { pageLimit, skipLimit } = variables;
     const dispatch = useDispatch();
     const nav = useNavigate();
@@ -28,10 +28,9 @@ const AllProsts = (): ReactElement => {
     useEffect(() => {
         (async () => {
             setLoading(true)
-            const result = await getter(`posts?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
+            const result = await getter<IPostsLimited>(`posts?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
             if (result.ok && result.data) {
-                const postsData = result.data as postsByLimit
-                dispatch(setAll({ posts: postsData.posts, total: postsData.total }));
+                dispatch(setAll(result.data));
             }
             setLoading(false);
             setVisibleLoader(false)

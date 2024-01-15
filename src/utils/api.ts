@@ -4,15 +4,15 @@ import axios from "axios";
 import { getCookie } from "./functions";
 import { variables } from "./variables";
 
-import { postBodyType, returnDeleteType, returnGetType,  returnPostType, returnPutType } from "../types/api";
+import { IApiReturn } from "../types/api";
 import {  useQuery } from "react-query";
 
-export const poster = async (
+export const poster = async <T,K>(
   url: string,
-  body: { data: postBodyType, json: boolean },
+  body: { data: K, json: boolean },
   nav?: NavigateFunction
-) => {
-  const result: returnPostType = { ok: false, data: null, msg: 'error' };
+) : Promise<IApiReturn<T>> =>  {
+  const result: IApiReturn<T> = { ok: false, data: null, msg: 'error' };
 
   try {
     const headers: Record<string, string> = {
@@ -37,7 +37,7 @@ export const poster = async (
 
     if (response.status === 201 || response.status === 200) {
       result.ok = true;
-      result.data = response.data; 
+      result.data = response.data as T; 
       result.msg = 'ok';
     } else {
       result.msg = response.data?.message || 'Request failed';
@@ -50,8 +50,8 @@ export const poster = async (
   }
 };
 
-export const getter = async (url: string, nav: NavigateFunction) => {
-  const result: returnGetType = { ok: false, data: null, msg: '' };
+export const getter = async <T>(url: string, nav: NavigateFunction):Promise<IApiReturn<T>> => {
+  const result: IApiReturn<T> = { ok: false, data: null, msg: '' };
 
   try {
     const headers: Record<string, string> = {
@@ -71,7 +71,7 @@ export const getter = async (url: string, nav: NavigateFunction) => {
 
     if (response.status === 200) {
       result.ok = true;
-      result.data = response.data; 
+      result.data = response.data as T; 
       result.msg = response.data.message ?? 'ok';
     } else {
       result.msg = response.data?.message || 'Request failed';
@@ -83,8 +83,8 @@ export const getter = async (url: string, nav: NavigateFunction) => {
   }
 };
 
-export const deleter = async (url: string, nav?: NavigateFunction) => {
-  const result: returnDeleteType = { ok: false, data: null, msg: 'error' };
+export const deleter = async (url: string, nav?: NavigateFunction): Promise<IApiReturn<number>> => {
+  const result: IApiReturn<number> = { ok: false, data: null, msg: 'error' };
 
   try {
     const headers: Record<string, string> = {
@@ -105,7 +105,7 @@ export const deleter = async (url: string, nav?: NavigateFunction) => {
 
     if (response.status === 200) {
       result.ok = true;
-      result.data = { id: response.data.id };
+      result.data =  response.data.id  as number;
       result.msg = 'ok';
     } else {
       result.msg = response.data?.message || 'Request failed';
@@ -117,12 +117,12 @@ export const deleter = async (url: string, nav?: NavigateFunction) => {
   }
 };
 
-export const putter = async (
+export const putter = async <T,K>(
   url: string,
-  body: { data: postBodyType, json: boolean },
+  body: { data: K, json: boolean },
   nav?: NavigateFunction
-) => {
-  const result: returnPutType = { ok: false, data: null, msg: 'error' };
+):Promise<IApiReturn<T>> => {
+  const result: IApiReturn<T> = { ok: false, data: null, msg: 'error' };
 
   try {
     const headers: Record<string, string> = {
@@ -143,7 +143,7 @@ export const putter = async (
 
     if (response.status === 201 || response.status === 200) {
       result.ok = true;
-      result.data = response.data;
+      result.data = response.data as T;
       result.msg = 'ok';
     } else {
       result.msg = response.data?.message || 'Request failed';

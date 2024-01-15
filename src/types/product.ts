@@ -11,7 +11,7 @@ export type IProduct = {
     images:string[]
 }
 
-export type EditIProduct = {
+export type IEditProduct = {
     title: string,
     description: string,
     price: number,

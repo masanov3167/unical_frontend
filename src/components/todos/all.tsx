@@ -11,13 +11,13 @@ import { addTodo, setAll } from "../../store/reducers/todos";
 import TodoCard from "./card";
 import Loading from "../reusable/loading";
 
-import { RootState } from "../../store/reducers";
-import { todosByLimit } from "../../types/api";
+import { IRootState } from "../../store/reducers";
+import { ITodosLimited } from "../../types/api";
 
 import "./styles.css"
 const AllTodos = (): ReactElement => {
-    const { total, todos } = useSelector((state: RootState) => state.todoSlice);
-    const { user } = useSelector((state: RootState) => state.userSlice);
+    const { total, todos } = useSelector((state: IRootState) => state.todoSlice);
+    const { user } = useSelector((state: IRootState) => state.userSlice);
     const { pageLimit, skipLimit } = variables;
     const dispatch = useDispatch();
     const nav = useNavigate();
@@ -28,10 +28,9 @@ const AllTodos = (): ReactElement => {
     useEffect(() => {
         (async () => {
             setLoading(true)
-            const result = await getter(`todos?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
+            const result = await getter<ITodosLimited>(`todos?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
             if (result.ok && result.data) {
-                const postsData = result.data as todosByLimit
-                dispatch(setAll({ todos: postsData.todos, total: postsData.total }));
+                dispatch(setAll(result.data));
             }
             setLoading(false);
             setVisibleLoader(false)

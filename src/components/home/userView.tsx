@@ -5,16 +5,17 @@ import { useNavigate } from "react-router-dom";
 
 import { deleteUser, updateUser } from "../../store/reducers/users";
 import { deleter } from "../../utils/api";
-import { userType } from "../../types/user";
-import { Gender } from "../../types/hookForm";
 import Form from "../reusable/form";
 import Image from "../reusable/image";
 import CardsHero from "../reusable/cardsHero";
 
+import { IUser } from "../../types/user";
+import { IGender } from "../../types/hookForm";
+
 import "./styles.css";
 
-type UserTypeWithoutToken = Omit<userType, 'token'>;
-const UserView = (user: UserTypeWithoutToken): ReactElement => {
+type IUserWithoutToken = Omit<IUser, 'token'>;
+const UserView = (user: IUserWithoutToken): ReactElement => {
     const dispatch = useDispatch();
     const nav = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
@@ -45,7 +46,7 @@ const UserView = (user: UserTypeWithoutToken): ReactElement => {
                             { name: "lastName", validate: { required: true, minLength: 4 } },
                             { name: "username", validate: { required: true, minLength: 4 } },
                             { name: "email", validate: { required: true, minLength: 4 } },
-                            { name: "gender", validate: { required: true, minLength: 4, validate: (value) => Object.values(Gender).includes(value as Gender) || 'Invalid gender' } },
+                            { name: "gender", validate: { required: true, minLength: 4, validate: (value) => Object.values(IGender).includes(value as IGender) || 'Invalid gender' } },
                         ]}
                     />
                 ) : (

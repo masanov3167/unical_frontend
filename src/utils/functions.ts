@@ -1,4 +1,4 @@
-import { userType } from "../types/user";
+import { IUser } from "../types/user";
 
 export const setCookie = (key: string, value: any, expiresInMinutes: number) => {
     try{
@@ -37,7 +37,7 @@ export const setCookie = (key: string, value: any, expiresInMinutes: number) => 
     document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   };
 
-  export function decodeJWT(token: string): userType | undefined {
+  export function decodeJWT(token: string): IUser | undefined {
     try {
       const tokenParts = token.split(".");
       if (tokenParts.length === 3) return JSON.parse(atob(tokenParts[1]));

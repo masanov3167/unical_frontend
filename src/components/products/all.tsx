@@ -11,12 +11,12 @@ import Form from "../reusable/form";
 import PagesHero from "../reusable/pagesHero";
 import Loading from "../reusable/loading";
 
-import { RootState } from "../../store/reducers";
-import { productsByLimit } from "../../types/api";
+import { IProductsLimited } from "../../types/api";
+import { IRootState } from "../../store/reducers";
 
 import "./styles.css";
 const AllProducts = (): ReactElement => {
-    const { total, products } = useSelector((state: RootState) => state.productSlice);
+    const { total, products } = useSelector((state: IRootState) => state.productSlice);
     const { pageLimit, skipLimit } = variables;
     const dispatch = useDispatch();
     const nav = useNavigate();
@@ -27,10 +27,9 @@ const AllProducts = (): ReactElement => {
     useEffect(() => {
         (async () => {
             setLoading(true)
-            const result = await getter(`products?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
+            const result = await getter<IProductsLimited>(`products?limit=${pageLimit}&skip=${currentPage * skipLimit}`, nav);
             if (result.ok && result.data) {
-                const productsData = result.data as productsByLimit
-                dispatch(setAll({ products: productsData.products, total: productsData.total }));
+                dispatch(setAll(result.data));
             }
             setLoading(false);
             setVisibleLoader(false)

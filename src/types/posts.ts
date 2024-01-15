@@ -5,14 +5,14 @@ export type IPost = {
     tags: string[]
 }
 
-export type AddIPost = {
+export type IAddPost = {
     userId: number,
     title: string,
     body: string,
     tags: string[]
 }
 
-export type EditIPost = {
+export type IEditPost = {
     title: string,
     body: string,
     tags: string[]

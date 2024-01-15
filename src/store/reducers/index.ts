@@ -11,6 +11,6 @@ const rootReducer = combineReducers({
   todoSlice: todoSliceReducer
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type IRootState = ReturnType<typeof rootReducer>;
 
 export default rootReducer;

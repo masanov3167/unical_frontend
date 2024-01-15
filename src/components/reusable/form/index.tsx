@@ -7,12 +7,13 @@ import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
 import Input from "../input";
 import { poster, putter } from "../../../utils/api";
-import { EditUser } from "../../../types/hookForm";
-import { EditIProduct } from "../../../types/product";
 import ActionButton from "../actionButton";
 
-import { AddIPost, EditIPost } from "../../../types/posts";
-import { AddITodo, EditITodo } from "../../../types/todo";
+
+import { IEditUser } from "../../../types/hookForm";
+import { IEditProduct } from "../../../types/product";
+import { IAddPost, IEditPost } from "../../../types/posts";
+import { IAddTodo, IEditTodo } from "../../../types/todo";
 
 import "./styles.css";
 
@@ -30,7 +31,7 @@ type FormInput = {
     type?: "checkbox" | "text"
 }
 
-type FieldsType = EditUser | EditIProduct | EditIPost | AddIPost | AddITodo | EditITodo
+type FieldsType = IEditUser | IEditProduct | IEditPost | IAddPost | IAddTodo | IEditTodo
 
 type isEditForm = {
     id: number,
@@ -81,7 +82,7 @@ const Form = ({ name, className, inputs, isEditForm, isAddForm, inputSize }: Pro
         if (isEditForm) {
             const { setLoading, id, updateValue, setEdit } = isEditForm;
             setLoading(true)
-            const result = await putter(`${name}/${id}`, { data: { ...data }, json: true }, nav);
+            const result = await putter<any, FieldsType>(`${name}/${id}`, { data: { ...data }, json: true }, nav);
             setLoading(false)
             if (result.ok && result.data) {
                 dispatch(updateValue(result.data));
@@ -94,7 +95,7 @@ const Form = ({ name, className, inputs, isEditForm, isAddForm, inputSize }: Pro
         if (isAddForm) {
             const { setLoading, updateValue, setAdd } = isAddForm;
             setLoading(true)
-            const result = await poster(`${name}/add`, { data: { ...data }, json: true }, nav);
+            const result = await poster<any, FieldsType>(`${name}/add`, { data: { ...data }, json: true }, nav);
             setLoading(false)
             if (result.ok && result.data) {
                 dispatch(updateValue(result.data));
